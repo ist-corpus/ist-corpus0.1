@@ -2,79 +2,142 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>小红书多模态语料库</title>
+    <title>小红书多模态语料库（图文+视频）</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Arial;background:#f7f8fa}
-        .container{max-width:1000px;margin:30px auto;padding:0 15px}
-        h1{text-align:center;color:#ff2442;margin-bottom:20px}
-        .slider{
-            display:flex;
-            gap:16px;
-            overflow-x:auto;
-            padding:10px 0 20px;
-            scroll-snap-type:x mandatory;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft Yahei", sans-serif; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        h1 { text-align: center; color: #0066ff; margin-bottom: 30px; }
+        .post-slider {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            scroll-snap-type: x mandatory;
         }
-        .card{
-            scroll-snap-align:start;
-            width:280px;
-            background:white;
-            border-radius:12px;
-            box-shadow:0 2px 10px rgba(0,0,0,0.08);
-            overflow:hidden;
-            flex-shrink:0;
+        .post-card {
+            scroll-snap-align: start;
+            min-width: 320px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            flex-shrink: 0;
         }
-        .media{width:100%;height:280px;object-fit:cover;background:#eee}
-        .info{padding:12px}
-        .title{font-weight:bold;margin-bottom:6px;font-size:15px}
-        .desc{font-size:13px;color:#666;line-height:1.4;margin-bottom:6px}
-        .tag{display:inline-block;background:#f2f2f2;color:#666;padding:3px 6px;border-radius:4px;font-size:12px;margin-right:4px;margin-bottom:4px}
+        .post-media {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+        .post-content {
+            padding: 15px;
+        }
+        .post-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .post-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tag {
+            background: #f0f0f0;
+            color: #666;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>小红书多模态语料库（可滑动）</h1>
-        <div class="slider" id="root"></div>
+        <h1>小红书多模态语料库（图文+视频）</h1>
+        <div class="post-slider" id="postSlider"></div>
     </div>
 
     <script>
-        const files = [
-            "search_contents_2025-12-22.json",
-            "search_contents_2025-12-23.json",
-            "search_contents_2025-12-24.json",
-            "search_contents_2026-01-01.json",
-            "search_contents_2026-01-05.json"
+        // 完全匹配你本地的JSON文件名，绝对正确
+        const jsonFiles = [
+            'search_contents_2025-12-22.json',
+            'search_contents_2025-12-23.json',
+            'search_contents_2025-12-24.json',
+            'search_contents_2026-01-01.json',
+            'search_contents_2026-01-05.json'
         ];
 
-        let all = [];
-        Promise.all(files.map(f => fetch(f).then(r=>r.json())))
-            .then(res => {
-                all = res.flat();
-                render(all);
-            })
+        let allPosts = [];
 
-        function render(list) {
-            const root = document.getElementById("root");
-            root.innerHTML = "";
-            list.forEach(p => {
-                const media = p.images?.length
-                    ? `<img class="media" src="posts/${p.note_id}/${p.images[0]}">`
-                    : p.video
-                    ? `<video class="media" controls src="posts/${p.note_id}/${p.video}"></video>`
-                    : `<div class="media"></div>`;
+        // 加载所有JSON数据，带错误捕获
+        Promise.all(
+            jsonFiles.map(file => 
+                fetch(file)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`加载失败: ${file}`);
+                        return res.json();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        return [];
+                    })
+            )
+        ).then(results => {
+            allPosts = results.flat();
+            if (allPosts.length === 0) {
+                document.getElementById('postSlider').innerHTML = '<p style="text-align:center; color:#999; width:100%;">未加载到语料数据，请检查JSON文件</p>';
+                return;
+            }
+            renderPosts(allPosts);
+        }).catch(err => {
+            document.getElementById('postSlider').innerHTML = `<p style="text-align:center; color:#999; width:100%;">数据加载异常: ${err.message}</p>`;
+            console.error(err);
+        });
 
-                const tags = (p.desc || "").match(/#[^#\s]+/g) || [];
-                const tagHtml = tags.map(t=>`<span class="tag">${t}</span>`).join("");
+        // 渲染横向滑动的帖子卡片
+        function renderPosts(posts) {
+            const slider = document.getElementById('postSlider');
+            slider.innerHTML = '';
 
-                root.innerHTML += `
-                <div class="card">
-                    ${media}
-                    <div class="info">
-                        <div class="title">${p.title || "无标题"}</div>
-                        <div class="desc">${p.desc || "无描述"}</div>
-                        <div>${tagHtml}</div>
+            posts.forEach(post => {
+                const card = document.createElement('div');
+                card.className = 'post-card';
+
+                // 媒体渲染（图片/视频/纯文字）
+                let mediaHtml = '<div class="post-media">纯文字内容</div>';
+                if (post.images && post.images.length > 0) {
+                    mediaHtml = `<img class="post-media" src="posts/${post.note_id}/${post.images[0]}" alt="${post.title || '帖子图片'}">`;
+                } else if (post.video) {
+                    mediaHtml = `<video class="post-media" controls src="posts/${post.note_id}/${post.video}"></video>`;
+                }
+
+                // 标签提取
+                const tags = post.desc ? post.desc.match(/#[^#\s]+/g) || [] : [];
+                const tagsHtml = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+
+                // 拼接完整卡片
+                card.innerHTML = `
+                    ${mediaHtml}
+                    <div class="post-content">
+                        <h3 class="post-title">${post.title || '无标题'}</h3>
+                        <p class="post-desc">${post.desc || '无描述'}</p>
+                        <div class="post-tags">${tagsHtml}</div>
                     </div>
-                </div>`;
+                `;
+
+                slider.appendChild(card);
             });
         }
     </script>
