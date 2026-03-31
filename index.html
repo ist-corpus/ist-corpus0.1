@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冰雪旅游专题语料库</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 顶部提示栏 */
+        .top-notice {
+            background-color: #f0f7ff;
+            color: #165dff;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid #d0e8ff;
+            text-align: center;
+        }
+
+        /* 头部信息 */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: #ffffff;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #165dff;
+            margin-bottom: 12px;
+        }
+
+        .header .contact {
+            font-size: 14px;
+            color: #666666;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* 模块标签栏 */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            background-color: #f5f7fa;
+            border-bottom: 1px solid #e5e6eb;
+            padding: 0 20px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            color: #666666;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: #165dff;
+            border-bottom-color: #165dff;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            color: #165dff;
+            background-color: rgba(22, 93, 255, 0.05);
+        }
+
+        /* 内容展示区域 */
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-content {
+            display: none;
+            background-color: #f9fafc;
+            border: 2px solid #e5e6eb;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(22, 93, 255, 0.05);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        /* 内容项样式 */
+        .content-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e6eb;
+        }
+
+        .content-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .content-item h3 {
+            font-size: 18px;
+            color: #165dff;
+            margin-bottom: 6px;
+        }
+
+        .content-item p {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        /* 查看语料按钮样式 */
+        .view-btn {
+            background-color: #165dff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover {
+            background-color: #0e48d8;
+        }
+
+        /* 底部卡片 */
+        .footer-cards {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #f9fafc;
+            border: 1px solid #e5e6eb;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card h4 {
+            font-size: 16px;
+            color: #165dff;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 13px;
+            color: #666666;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 顶部小字（原样恢复） -->
+    <div class="top-notice">
+        Ice-Snow Tourism Corpus 冰雪旅游专题语料库
+    </div>
+
+    <!-- 头部信息（原样恢复） -->
+    <div class="header">
+        <h1>冰雪旅游专题语料库</h1>
+        <div class="contact">
+            <span>📱 建设者</span>
+            <span>📧 浙江外国语学院</span>
+            <span>📍 浙江省杭州市</span>
+            <span>🌐 github.com/istc-corpus</span>
+        </div>
+    </div>
+
+    <!-- 三个标签按钮：全部可点！原样恢复！ -->
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="show('social')">社媒语料</button>
+        <button class="tab-btn" onclick="show('official')">官推语料</button>
+        <button class="tab-btn" onclick="show('gov')">政府公文</button>
+    </div>
+
+    <div class="content-container">
+        <!-- 社媒语料 → 按钮改为跳转滑动页面 -->
+        <div class="section-content active" id="social">
+            <div class="content-item">
+                <h3>小红书平台语料</h3>
+                <p>语料说明：从热门社交平台小红书中，利用爬虫工具根据关键词收集相关帖子及图片视频资料，经过人工筛选保留与冰雪旅游等关键词关联性强的语料。</p>
+                <button class="view-btn" onclick="window.open('social_media_posts.html','_blank')">查看社媒语料</button>
+            </div>
+        </div>
+
+        <!-- 官推语料 → 原样恢复，可点 -->
+        <div class="section-content" id="official">
+            <div class="content-item">
+                <h3>文旅宣传</h3>
+                <p>语料说明：文化和旅游部官网、文旅中国等国家权威平台和地方文旅网站收集。</p>
+                <button class="view-btn" onclick="window.open('文旅宣传.txt','_blank')">查看文旅宣传语料</button>
+            </div>
+            <div class="content-item">
+                <h3>媒体报道</h3>
+                <p>语料说明：收集新华社、央视网、光明网等权威媒体关于冰雪旅游的报道。</p>
+                <button class="view-btn" onclick="window.open('媒体报道.txt','_blank')">查看媒体报道语料</button>
+            </div>
+        </div>
+
+        <!-- 政府公文 → 原样恢复，可点 -->
+        <div class="section-content" id="gov">
+            <div class="content-item">
+                <h3>政府公文语料</h3>
+                <p>语料说明：从中华人民共和国国家发展和改革委员会信息网站、中国政府网、黑龙江政务服务网等国家和地方的政府官方网站收集。</p>
+                <button class="view-btn" onclick="window.open('政府公文.txt','_blank')">查看政府公文语料</button>
+            </div>
+        </div>
+
+        <!-- 底部卡片（原样全部恢复） -->
+        <div class="footer-cards">
+            <div class="card">
+                <h4>🌐 联系我们</h4>
+                <p>GitHub：github.com/istc-corpus</p>
+                <p>维护单位：浙江外国语学院</p>
+            </div>
+            <div class="card">
+                <h4>❄️ 语料说明</h4>
+                <p>本语料库涵盖社媒、官推、政府公文三类冰雪旅游相关语料，所有语料均经过人工筛选和整理。</p>
+            </div>
+            <div class="card">
+                <h4>📋 使用提示</h4>
+                <p>点击语料按钮可查看对应文件，文件将在新窗口打开，建议使用电脑端查看获得更佳体验。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 切换标签功能（全部正常可用）
+        function show(id) {
+            // 隐藏全部
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            // 取消全部激活
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+            // 显示当前
+            document.getElementById(id).classList.add('active');
+            document.querySelector(`.tab-btn[onclick="show('${id}')"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
